@@ -1,11 +1,12 @@
 ﻿public class Combat
 {
     private bool tourAlier = false;
+    Random random = new Random();
     public void startCombat(EntityAbstrac alier, EntityAbstrac enemie)
     {
         while (alier._heal >= 0 || enemie._heal >= 0) 
         { 
-            if(alier._speed > enemie._speed && tourAlier) 
+            if(alier._speed > enemie._speed || tourAlier) 
             {
                 tourAlier = true;
             }
@@ -16,7 +17,7 @@
 
             if(tourAlier ) 
             {
-                Console.WriteLine("les differentes option: \n A.Attaque B.soin C.Stamina ");
+                Console.WriteLine("les differentes option: \n A.Attaque B.Soin C.Stamina ");
                 ConsoleKeyInfo keyInfo = Console.ReadKey();
                 switch (keyInfo.Key)
                 {
@@ -31,24 +32,31 @@
                         break;
                    
                 }
-                if(enemie._heal <= 0) { break; }
+                if(enemie._heal <= 0) {
+                    Console.WriteLine("Tu as gagner");
+                    int nombreAleatoire = random.Next(1, 10*enemie._level);
+                    alier.AddExperience(nombreAleatoire);
+                    break; 
+                }
                 tourAlier = false;
+                Console.WriteLine($"vie {alier._name} : {alier._heal} ");
+                Console.WriteLine($"vie {enemie._name} : {enemie._heal} ");
             }
-            Console.WriteLine($"vie {alier._name} : {alier._heal} ");
-            Console.WriteLine($"vie {enemie._name} : {enemie._heal} ");
             if (!tourAlier )
             {
-                Random random = new Random();
 
                 int nombreAleatoire = random.Next(1, 3);
                 if(nombreAleatoire == 1) alier.TakeDamage(50);
                 if(nombreAleatoire == 2) enemie.AddHeal(10);
                 if(nombreAleatoire == 3) enemie.AddStamina(10);
-                if (alier._heal <= 0) { break; }
+                if (alier._heal <= 0) {
+                    Console.WriteLine("Tu as perdu");
+                    break; 
+                }
                 tourAlier = true;
+                Console.WriteLine($"vie {alier._name} : {alier._heal} ");
+                Console.WriteLine($"vie {enemie._name} : {enemie._heal} ");
             }
-            Console.WriteLine($"vie {alier._name} : {alier._heal} ");
-            Console.WriteLine($"vie {enemie._name} : {enemie._heal} ");
         }
     }
 }

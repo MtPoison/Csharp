@@ -1,4 +1,6 @@
 ﻿
+using System.Runtime.CompilerServices;
+
 class Marine : EntityAbstrac
 {
     public override void DisplayDetails()
@@ -24,5 +26,21 @@ class Marine : EntityAbstrac
     public override void LessStamina(int less)
     {
         _stamina -= less;
+    }
+    public override void AddExperience(int add)
+    {
+        _experience += add;
+    }
+
+    public override void AddLevel()
+    {
+        if(_experience >= _maxExerience)
+        {
+            int tmp = _experience - _maxExerience;
+            _experience = 0;
+            _experience = tmp;
+            _level++;
+            _maxExerience = 100 * _level;
+        }
     }
 }
