@@ -41,6 +41,7 @@ public class Jimbey : EntityAbstrac
             _experience = tmp;
             _level++;
             _maxExerience = 100 * _level;
+            Console.WriteLine($"Tu as monter de nv {_level} : {_experience}/{_maxExerience} ");
         }
     }
 }

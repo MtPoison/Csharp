@@ -32,15 +32,16 @@
                         break;
                    
                 }
-                if(enemie._heal <= 0) {
+                Console.WriteLine($"vie {alier._name} : {alier._heal} ");
+                Console.WriteLine($"vie {enemie._name} : {enemie._heal} ");
+                if (enemie._heal <= 0) {
                     Console.WriteLine("Tu as gagner");
-                    int nombreAleatoire = random.Next(1, 10*enemie._level);
+                    int nombreAleatoire = random.Next(1, 10 * enemie._level);
                     alier.AddExperience(nombreAleatoire);
+                    
                     break; 
                 }
                 tourAlier = false;
-                Console.WriteLine($"vie {alier._name} : {alier._heal} ");
-                Console.WriteLine($"vie {enemie._name} : {enemie._heal} ");
             }
             if (!tourAlier )
             {
@@ -49,13 +50,14 @@
                 if(nombreAleatoire == 1) alier.TakeDamage(50);
                 if(nombreAleatoire == 2) enemie.AddHeal(10);
                 if(nombreAleatoire == 3) enemie.AddStamina(10);
-                if (alier._heal <= 0) {
+                Console.WriteLine($"vie {alier._name} : {alier._heal} ");
+                Console.WriteLine($"vie {enemie._name} : {enemie._heal} ");
+                if (alier._heal <= 0) 
+                {
                     Console.WriteLine("Tu as perdu");
                     break; 
                 }
                 tourAlier = true;
-                Console.WriteLine($"vie {alier._name} : {alier._heal} ");
-                Console.WriteLine($"vie {enemie._name} : {enemie._heal} ");
             }
         }
     }
