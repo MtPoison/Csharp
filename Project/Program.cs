@@ -1,14 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, Bongo!");
-Initialisation init = new Initialisation();
-Marine marine = new Marine();
-Jimbey jimbey = new Jimbey();
-init.creationEntity(marine, jimbey);
-marine.DisplayDetails();
-jimbey.DisplayDetails();
-using Project.Attack;
-using System;
-using static System.Net.Mime.MediaTypeNames;
+﻿using Project.Attack;
 
 class Program
 {
@@ -16,8 +6,15 @@ class Program
     {
         Haki attack = new Haki { name = "Haki Observation", type = AttackType.Haki, damage = 10 };
 
-        Console.WindowWidth = 40; // Ajuster la largeur de la console
-        Console.WindowHeight = 20; // Ajuster la hauteur de la console
+        Initialisation init = new Initialisation();
+        Marine marine = new Marine();
+        Jimbey jimbey = new Jimbey();
+        init.creationEntity(marine, jimbey);
+        marine.DisplayDetails();
+        jimbey.DisplayDetails();
+
+        Console.WindowWidth = 40;
+        Console.WindowHeight = 20;
 
         char[,] carte =
         {
