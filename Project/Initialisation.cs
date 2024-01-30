@@ -15,7 +15,7 @@
         jimbey._attack = 75;
         jimbey._stamina = 50;
         jimbey._precision = 90;
-        jimbey._speed = 60;
+        jimbey._speed = 70;
         jimbey._level = 5;
     }
 }
