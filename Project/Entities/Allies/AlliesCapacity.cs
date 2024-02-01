@@ -1,4 +1,4 @@
-﻿class AlliesCapacity : Allies
+﻿public class AlliesCapacity : Allies
 {
 
 }

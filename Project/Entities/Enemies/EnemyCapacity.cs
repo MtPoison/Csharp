@@ -1,4 +1,4 @@
-﻿class EnemyCapacity : Enemy
+﻿public class EnemyCapacity : Enemy
 {
 
 }

@@ -1,5 +1,6 @@
 ﻿using MapGame;
 using MapEntities;
+using System.IO;
 
 namespace MapGame
 {
@@ -8,6 +9,7 @@ namespace MapGame
         private Map[,] worldMaps;
         private int worldSize = 3;
         private EnemyMap enemymap;
+        Fight fight = new Fight();
 
         public World()
         {
@@ -175,18 +177,20 @@ namespace MapGame
             }
         }
 
-        public void CheckForEncounter(Player player)
+        public void CheckForEncounter(Player player, Allies allies, Enemy enemy)
         {
+
             Map? currentMap = GetMapAt(player.WorldX, player.WorldY);
-            if (currentMap != null && currentMap.IsEnemy(player.LocalX, player.LocalY))
+            if (currentMap != null && currentMap.IsEnemy(player.LocalX , player.LocalY))
             {
                 // Gérer la rencontre entre le joueur et l'ennemi
-                HandleEncounter(player, enemymap);
+                HandleEncounter(allies, enemy);
             }
         }
-        private void HandleEncounter(Player player, EnemyMap enemy)
+        private void HandleEncounter(Allies allies, Enemy enemy)
         {
             // Combat entre le joueur et l'ennemi
+            fight.startCombat(allies.alliesContainer.Allies1, enemy.enemyContainer.Enemy1);
         }
 
         private void EnsurePlayerOnLand(Map currentMap, Player player)

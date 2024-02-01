@@ -1,7 +1,7 @@
 ﻿
 using Newtonsoft.Json;
 
-class Allies : EntityAbstract
+public class Allies : EntityAbstract
 {
     public List<AlliesCapacity> _ListCapacities { get; set; } = new List<AlliesCapacity>();
     private Allies allies;
@@ -121,7 +121,6 @@ class Allies : EntityAbstract
 
     public override void AddLevel()
     {
-        Console.WriteLine($"cc");
         if (_experience >= _maxExerience)
         {
             int tmp = _experience - _maxExerience;

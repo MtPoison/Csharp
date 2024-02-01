@@ -1,7 +1,7 @@
 ﻿
 using Newtonsoft.Json;
 
-class Enemy : EntityAbstract
+public class Enemy : EntityAbstract
 {
     public List<EnemyCapacity> _ListCapacities { get; set; } = new List<EnemyCapacity>();
     private Enemy enemy;
