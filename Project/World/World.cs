@@ -1,6 +1,7 @@
 ﻿using MapGame;
 using MapEntities;
-using System.IO;
+using System;
+using System.Collections.Generic;
 
 namespace MapGame
 {
@@ -8,7 +9,9 @@ namespace MapGame
     {
         private Map[,] worldMaps;
         private int worldSize = 3;
-        private EnemyMap enemymap;
+        private List<EnemyMap> enemyMaps = new List<EnemyMap>();
+        private List<int> positionX = new List<int>();
+        private bool CombatStart = false;
         Fight fight = new Fight();
 
         public World()
@@ -23,14 +26,14 @@ namespace MapGame
             {
                 for (int j = 0; j < worldSize; j++)
                 {
-                    bool isCenterMap = (i == 1 && j == 1); // Carte centrale avec le village
-                    bool isSpecialMap = (i == 0 && j == 2); // Carte spéciale en haut à droite
+                    bool isCenterMap = (i == 1 && j == 1);
+                    bool isSpecialMap = (i == 0 && j == 2);
                     char[,] selectedLayout = CreateRandomLayout(isCenterMap, isSpecialMap);
                     worldMaps[i, j] = new Map(20, 20);
                     worldMaps[i, j].InitializeCustomMap(selectedLayout);
-                    if (!(i == 1 && j == 1) && !(i == 0 && j == 2)) // Si ce n'est pas le village ni la zone spéciale
+                    if (!(i == 1 && j == 1) && !(i == 0 && j == 2))
                     {
-                        PlaceEnemiesRandomly(worldMaps[i, j]); // Placer des ennemis aléatoirement
+                        PlaceEnemiesRandomly(worldMaps[i, j], i ,j );
                     }
                 }
             }
@@ -181,10 +184,17 @@ namespace MapGame
         {
 
             Map? currentMap = GetMapAt(player.WorldX, player.WorldY);
-            if (currentMap != null && currentMap.IsEnemy(player.LocalX , player.LocalY))
+            if(enemyMaps.Count != 0)
             {
-                // Gérer la rencontre entre le joueur et l'ennemi
-                HandleEncounter(allies, enemy);
+                for(int i = 0; i < enemyMaps.Count; i++)
+                {
+                    if (enemyMaps[i].LocalX == player.LocalX && enemyMaps[i].WorldX == player.WorldX && enemyMaps[i].WorldY == player.WorldY && !enemyMaps[i].CombatStart)
+                    {
+                        // Gérer la rencontre entre le joueur et l'ennemi
+                        HandleEncounter(allies, enemy);
+                        enemyMaps[i].CombatStart = true;
+                    } 
+                }
             }
         }
         private void HandleEncounter(Allies allies, Enemy enemy)
@@ -223,32 +233,40 @@ namespace MapGame
 
         private void InitializeEnemy()
         {
-            // Placer l'ennemi de manière aléatoire sur la carte centrale
             Random random = new Random();
-            int enemyLocalX = random.Next(1, 19); // Éviter les bords
-            int enemyLocalY = random.Next(1, 19); // Éviter les bords
+            int enemyLocalX = random.Next(1, 19);
+            int enemyLocalY = random.Next(1, 19);
 
-            enemymap = new EnemyMap(1, 1, enemyLocalX, enemyLocalY); // Positionner l'ennemi dans le monde 3x3
+            EnemyMap newEnemyMap = new EnemyMap(1, 1, enemyLocalX, enemyLocalY);
+            enemyMaps.Add(newEnemyMap);
+
             Map centerMap = worldMaps[1, 1];
-            centerMap.PlaceEnemy(enemymap.LocalX, enemymap.LocalY);
+            centerMap.PlaceEnemy(newEnemyMap.LocalX, newEnemyMap.LocalY);
         }
 
-        private void PlaceEnemiesRandomly(Map map)
+        private void PlaceEnemiesRandomly(Map map, int positionX, int positionY)
         {
             Random random = new Random();
-            int numberOfEnemies = random.Next(1, 3); // Entre 1 et 3 ennemis
+            int numberOfEnemies = random.Next(1, 3);
 
             for (int i = 0; i < numberOfEnemies; i++)
             {
                 int x, y;
                 do
                 {
-                    x = random.Next(17);
-                    y = random.Next(17);
-                } while (map.IsWater(x, y) || map.IsPlayer(x, y) || map.matrix[x, y] == 'O'); 
+                    x = random.Next(20);
+                    y = random.Next(20);
+                } while (map.IsWater(x, y) || map.IsPlayer(x, y) || map.matrix[x, y] == 'O');
 
-                map.PlaceEnemy(x, y); // Placer l'ennemi
+                EnemyMap newEnemyMap = new EnemyMap(positionX, positionY, x, y);
+                enemyMaps.Add(newEnemyMap);
+                map.PlaceEnemy(x, y);
             }
+        }
+
+        public List<EnemyMap> GetEnemyMaps()
+        {
+            return enemyMaps;
         }
     }
 }
