@@ -8,13 +8,16 @@ public class EnemyMap
     private int WorldX;
     private int WorldY;
     private bool CombatStart;
+    public string AI_Level { get; set; }
+    public ConsoleColor Color { get; set; }
 
-    public EnemyMap(int worldX, int worldY, int localX, int localY)
+    public EnemyMap(int worldX, int worldY, int localX, int localY, string aiLevel)
     {
         WorldX = worldX;
         WorldY = worldY;
         LocalX = localX;
         LocalY = localY;
+        AI_Level = aiLevel;
     }
 
     public int WORLDX

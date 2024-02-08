@@ -1,5 +1,4 @@
-﻿
-using MapEntities;
+﻿using MapEntities;
 using MapGame;
 
 namespace MapGame
@@ -11,6 +10,7 @@ namespace MapGame
         private ConsoleColor playerColor = ConsoleColor.Magenta;
         private ConsoleColor enemyColor = ConsoleColor.Red;
         private ConsoleColor doorColor = ConsoleColor.DarkYellow;
+        private Dictionary<(int, int), EnemyMap> enemyPositions = new Dictionary<(int, int), EnemyMap>();
 
         public char[,] matrix;
         private int rows;
@@ -53,7 +53,6 @@ namespace MapGame
                         case '@': currentColor = playerColor; break;
                         case '~': currentColor = waterColor; break;
                         case '.': currentColor = grassColor; break;
-                        case 'O': currentColor = enemyColor; break;
                         case 'H': currentColor = ConsoleColor.Gray; break; // Murs des maisons
                         case 'F': currentColor = ConsoleColor.DarkGray; break; // Murs de la forteresse
                         case 'D':
@@ -61,6 +60,12 @@ namespace MapGame
                         case '[':
                         case '―': currentColor = ConsoleColor.DarkYellow; break; // Portes
                         case 'S': currentColor = ConsoleColor.Yellow; break; // Sable
+                        case 'O':
+                            if (GetEnemyAt(i, j) != null)
+                                currentColor = GetEnemyAt(i, j).Color;
+                            else
+                                currentColor = enemyColor;
+                            break;
                     }
 
                     Console.ForegroundColor = currentColor;
@@ -124,12 +129,37 @@ namespace MapGame
         }
 
 
-        public void PlaceEnemy(int x, int y)
+        public void PlaceEnemy(int worldX, int worldY, int localX, int localY, string aiLevel)
         {
-            if (CanMoveTo(x, y) && matrix[x, y] != '@')
+            if (CanMoveTo(localX, localY) && matrix[localX, localY] != '@')
             {
-                matrix[x, y] = 'O';
+                ConsoleColor color = aiLevel switch
+                {
+                    "cyan" => ConsoleColor.Cyan,
+                    "darkMagenta" => ConsoleColor.DarkMagenta,
+                    "darkRed" => ConsoleColor.DarkRed,
+                    _ => ConsoleColor.Red,
+                };
+
+                EnemyMap newEnemyMap = new EnemyMap(worldX, worldY, localX, localY, aiLevel)
+                {
+                    Color = color
+                };
+                enemyPositions[(localX, localY)] = newEnemyMap;
+                matrix[localX, localY] = 'O'; // Placez l'ennemi sur la carte
+                enemyPositions[(localX, localY)] = newEnemyMap;
+                matrix[localX, localY] = 'O'; // Placez l'ennemi sur la carte
             }
+        }
+
+        public EnemyMap GetEnemyAt(int x, int y)
+        {
+            if (enemyPositions.TryGetValue((x, y), out EnemyMap enemyMap))
+            {
+                return enemyMap;
+            }
+
+            return null; // Aucun ennemi à cette position
         }
 
         public void ClearPlayerPosition(int x, int y)

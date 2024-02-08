@@ -18,6 +18,7 @@ namespace MapGame
         Random random = new Random();
         private bool AllieHealth = false;
         List<string> alliesNames;
+        private Dictionary<(int, int, int, int), EnemyMap> enemyPositions = new Dictionary<(int, int, int, int), EnemyMap>();
 
         public World()
         {
@@ -38,7 +39,7 @@ namespace MapGame
                     char[,] selectedLayout = CreateRandomLayout(isBorderMap, isCenterMap, isSpecialMap, i, j);
                     worldMaps[i, j] = new Map(20, 20);
                     worldMaps[i, j].InitializeCustomMap(selectedLayout);
-                    if (i != 1 && j != 1 && i != 0 && j != 2)
+                    if (!(i == 1 && j == 1) && !(i == 0 && j == 2)) 
                     {
                         PlaceEnemiesRandomly(worldMaps[i, j], i, j);
                     }
@@ -213,7 +214,7 @@ namespace MapGame
                     y = random.Next(startY + 1, startY + height - 1);
                 } while (layout[x, y] != ' '); // Modifier pour correspondre à l'espace vide
 
-                EnemyMap newEnemyMap = new EnemyMap(0, 2, x, y);
+                EnemyMap newEnemyMap = new EnemyMap(0, 2, x, y, "");
                 enemyMaps.Add(newEnemyMap);
             }
         }
@@ -368,44 +369,32 @@ namespace MapGame
                 }
             }
         }
+
+
         public void CheckForEncounter(Player player, Allies allies, Enemy enemy)
         {
             if (enemyMaps.Count != 0)
             {
-                for (int i = 0; i < enemyMaps.Count; i++)
+                foreach (var enemyMap in enemyMaps)
                 {
-                    if (enemyMaps[i].LOCALX == player.LOCALX && enemyMaps[i].WORLDX == player.WORLDX && enemyMaps[i].WORLDY == player.WORLDY && !enemyMaps[i].COMBATSTART && AllieHealth)
+                    // Vérifiez si l'ennemi est sur le même axe X et dans le même monde que le joueur
+                    if (enemyMap.LOCALX == player.LOCALX && enemyMap.WORLDX == player.WORLDX && enemyMap.WORLDY == player.WORLDY && !enemyMap.COMBATSTART && AllieHealth)
                     {
-                        int randChance = random.Next(100);
-
-                        int chanceStartCombat1 = 50;
-                        int chanceStartCombat2 = 30;
-                        int chanceStartCombat3 = 20; 
-
-                        if (randChance < chanceStartCombat1)
-                        {
-                            HandleEncounter(allies, enemy, player, 1);
-                        }
-                        else if (randChance < chanceStartCombat1 + chanceStartCombat2)
-                        {
-                            HandleEncounter(allies, enemy, player, 2);
-                        }
-                        else if (randChance < chanceStartCombat1 + chanceStartCombat2 + chanceStartCombat3)
-                        {
-                            HandleEncounter(allies, enemy, player, 3);
-                        }
-
-                        enemyMaps[i].COMBATSTART = true;
+                        // Déclenche un combat
+                        HandleEncounter(allies, enemy, player, 1);
+                        enemyMap.COMBATSTART = true;
                     }
                 }
             }
         }
+
 
         private void HandleEncounter(Allies allies, Enemy enemy, Player p, int combatType)
         {
             // Combat entre le joueur et l'ennemi
             fight.startCombat(allies.entitiesContainer, false, p, combatType);
         }
+
 
         /*private void InitializeEnemy()
         {
@@ -427,32 +416,32 @@ namespace MapGame
             }
         }*/
 
-        private void PlaceEnemiesRandomly(Map map, int positionX, int positionY)
+        private void PlaceEnemiesRandomly(Map map, int worldX, int worldY)
         {
-            int chanceSpawnEnemy = 75; // Par exemple, 50% de chance de placer un ennemi aléatoire
+            int chanceSpawnEnemy = 75; // Pourcentage de chance de placer un ennemi
+            string[] aiLevels = { "cyan", "darkMagenta", "darkRed" }; // Différents niveaux d'IA
 
-            for (int i = 0; i < 3; i++) // Vous pouvez ajuster le nombre d'ennemis à placer
+            for (int i = 0; i < 3; i++) // Nombre d'ennemis à placer
             {
-                // Générer un nombre aléatoire entre 0 et 99 pour chaque ennemi
                 int randChance = random.Next(100);
-
-                // Vérifier si le nombre aléatoire est inférieur au seuil de pourcentage
                 if (randChance < chanceSpawnEnemy)
                 {
-                    int x, y;
+                    int localX, localY;
                     do
                     {
-                        x = random.Next(20);
-                        y = random.Next(20);
-                    } while (map.IsWater(x, y) || map.IsPlayer(x, y) || map.matrix[x, y] == 'O');
+                        localX = random.Next(20);
+                        localY = random.Next(20);
+                    } while (map.matrix[localX, localY] != '.'); // S'assurer que la position est sur l'herbe
 
-                    EnemyMap newEnemyMap = new EnemyMap(positionX, positionY, x, y);
-                    enemyMaps.Add(newEnemyMap);
-                    map.PlaceEnemy(x, y);
-
+                    string aiLevel = aiLevels[random.Next(aiLevels.Length)]; // Sélection aléatoire du niveau d'IA
+                    map.PlaceEnemy(worldX, worldY, localX, localY, aiLevel); // Modifier pour utiliser les coordonnées correctes et le niveau d'IA
                 }
             }
         }
+
+
+
+
         public void CheckRandEnemy(Player player, Allies allies)
         {
             int randEnemy = random.Next(1, 19);

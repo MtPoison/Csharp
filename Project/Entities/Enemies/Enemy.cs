@@ -7,6 +7,14 @@ public class Enemy : EntityAbstract
 {
     Random random = new Random();
     public string _difficultyIA;
+    public string AI_Level { get; set; }
+
+    public void InitializeAI(string aiLevel)
+    {
+        AI_Level = aiLevel;
+        // Initialiser l'IA basée sur aiLevel...
+    }
+
     public override void DisplayDetails()
     {
         Console.WriteLine($"Name : {_name} Health: {_health}, Stamina: {_stamina}, Speed: {_speed}, Level: {_level}");

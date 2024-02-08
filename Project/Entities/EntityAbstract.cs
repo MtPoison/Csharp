@@ -100,7 +100,7 @@ public abstract class EntityAbstract
 
         Allies allies2 = new Allies
         {
-            _name = "Monkey D.Luffy",
+            _name = "Luffy",
             _type = "Paramecia",
             _blocked = 0,
             _currentBlocked = 0,
