@@ -68,10 +68,11 @@ public class Fight
                 {
 
                     DetermineTour(ref allie, enemie);
-
+                    
                     if (tourAlier)
                     {
-                        HandleAllieTurn(entities, ref allie, enemie, player);
+                        
+                        if (!HandleAllieTurn(entities, ref allie, enemie, player)) { break; }
                     }
                     else
                     {
@@ -91,7 +92,9 @@ public class Fight
 
                     if (tourAlier)
                     {
-                        HandleAllieTurn(entities, ref allie, enemie, player);
+                        
+                        if( !HandleAllieTurn(entities, ref allie, enemie, player))
+                        { break; }
                     }
                     else
                     {
@@ -110,7 +113,8 @@ public class Fight
 
                     if (tourAlier)
                     {
-                        HandleAllieTurn(entities, ref allie, enemie, player);
+                        
+                        if (!HandleAllieTurn(entities, ref allie, enemie, player)) { break; }
                     }
                     else
                     {
@@ -340,7 +344,7 @@ public class Fight
     {
         // va chercher tout les alliés dans le json qui ont de la vie
         List<string> alliesNames = entities.alliesList
-            .Where(a => a.health > 0)
+            .Where(a => a.health > 0.0)
             .Select(a => a.name)
             .ToList();
 

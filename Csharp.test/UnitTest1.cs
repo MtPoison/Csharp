@@ -57,8 +57,6 @@ namespace Csharp.test
             {
                 name = "Ace",
                 type = "Logia",
-                blocked = 0,
-                currentBlocked = 0,
                 maxhealth = 300,
                 health = 300.0f,
                 stamina = 200.0f,
@@ -114,8 +112,6 @@ namespace Csharp.test
                 name = "Marine",
                 type = "Humain",
                 difficultyIA = "Normal",
-                blocked = 0,
-                currentBlocked = 0,
                 maxhealth = 500,
                 health = 500.0f,
                 stamina = 300.0f,
@@ -170,8 +166,6 @@ namespace Csharp.test
             {
                 name = "Ace",
                 type = "Logia",
-                blocked = 0,
-                currentBlocked = 0,
                 maxhealth = 300,
                 health = 300.0f,
                 stamina = 200.0f,
@@ -234,8 +228,6 @@ namespace Csharp.test
             {
                 name = "Ace",
                 type = "Logia",
-                blocked = 0,
-                currentBlocked = 0,
                 maxhealth = 300,
                 health = 300.0f,
                 stamina = 200.0f,
@@ -290,8 +282,6 @@ namespace Csharp.test
             {
                 name = "Monkey D.Luffy",
                 type = "Paramecia",
-                blocked = 0,
-                currentBlocked = 0,
                 maxhealth = 500,
                 health = 500.0f,
                 stamina = 300.0f,

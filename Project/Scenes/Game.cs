@@ -47,7 +47,7 @@ namespace InGame
 
 
             ";
-            string[] options = { "Jouer", "Crédits", "Quitter" };
+            string[] options = { "Jouer", "Crédits", "Recommencer la partie", "Quitter" };
             Menu mainMenu = new Menu(prompt, options);
             int selectedIndex = mainMenu.Run();
 
@@ -61,9 +61,37 @@ namespace InGame
                     Credits();
                     break;
                 case 2:
+                    ResetGame();
+                    break;
+                case 3:
                     ExitGame();
                     break;
             }
+        }
+
+        private void ResetGame()
+        {
+            string cheminFichier = "../../../Entities/entity.json";
+
+            try
+            {
+                if (File.Exists(cheminFichier))
+                {
+                    File.Delete(cheminFichier);
+                    Console.WriteLine("La partie a été reset avec succès!");
+                    Console.ReadKey(true);
+                    RunMainMenu();
+                }
+                else
+                {
+                    Console.WriteLine("Le fichier JSON n'existe pas.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Une erreur s'est produite lors de la suppression du fichier : {ex.Message}");
+            }
+
         }
 
         private void DisplayArt()
